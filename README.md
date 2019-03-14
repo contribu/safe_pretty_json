@@ -2,6 +2,8 @@
 
 SafePrettyJson is a fast and safe alternative to `JSON.pretty_generate(JSON.parse(input))`.
 
+Safe means that the meaning of JSON is not modified (floating point reporesentation and key order)
+
 ## Features
 
 - 20x Fast compared to `JSON.pretty_generate(JSON.parse(input))`
