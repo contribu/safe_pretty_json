@@ -9,3 +9,11 @@
 
 # rspec failure tracking
 .rspec_status
+
+safe_pretty_json-*.gem
+
+extconf.h
+Makefile
+*.bundle
+*.o
+*.log
