@@ -15,6 +15,7 @@ RSpec.describe SafePrettyJson do
         { a: 1 },
         { a: [1, 2, 3] },
         { a: 1, c: 3, b: 2 },
+        { a: { b: { c: ['abc', { d: 4 }, [], [{}]] } } },
         { a: '{' },
         { a: '[' },
         { a: '}' },
@@ -59,6 +60,14 @@ RSpec.describe SafePrettyJson do
         [
           "{ \"a\": \f\n\r\t\v1 }",
           "{\n  \"a\": 1\n}"
+        ],
+        [
+          ' { "a": 1 }',
+          "{\n  \"a\": 1\n}"
+        ],
+        [
+          '{ "a": 1 } ',
+          "{\n  \"a\": 1\n}"
         ]
       ].each do |input, output|
         it input do
@@ -89,6 +98,13 @@ RSpec.describe SafePrettyJson do
       it 'process result of to_str' do
         json_str = Struct.new('Test', :to_str).new('{}')
         expect(SafePrettyJson.prettify(json_str)).to eq(JSON.pretty_generate({}))
+      end
+    end
+
+    describe 'string containing nil' do
+      it 'raise ArgumentError' do
+        json_str = ['{}'.unpack('c*'), 0, 'garbage'.unpack('c*')].flatten.pack('c*')
+        expect { SafePrettyJson.prettify(json_str) }.to raise_error(ArgumentError)
       end
     end
   end
