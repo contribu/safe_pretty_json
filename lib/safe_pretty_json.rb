@@ -1,6 +1,11 @@
-require "safe_pretty_json/version"
+# frozen_string_literal: true
+
+require 'safe_pretty_json/version'
 
 module SafePrettyJson
   class Error < StandardError; end
-  # Your code goes here...
+
+  def self.prettify(json_str)
+    "Hello"
+  end
 end
