@@ -50,8 +50,8 @@ ruby bench/bench.rb
 
 ```
                  user     system      total        real
-simple       9.720000   0.000000   9.720000 (  9.725314)
-safe_pretty_json  0.860000   0.000000   0.860000 (  0.859912)
+simple       9.840000   0.004000   9.844000 (  9.844245)
+safe_pretty_json  0.484000   0.000000   0.484000 (  0.485056)
 ```
 
 ## Development
