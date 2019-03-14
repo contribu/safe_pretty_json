@@ -1,4 +1,3 @@
-#include <vector>
 #include <ruby.h>
 #include "extconf.h"
 
@@ -6,13 +5,15 @@ namespace {
 
 class Prettifier {
 public:
-    Prettifier(const char *input): input_(input), nest_count_(0) {
+    Prettifier(const char *input): input_(input), nest_count_(0), output_(0), output_size_(0), output_memory_size_(0) {
         Parse();
     }
+    ~Prettifier() {
+        xfree(output_);
+    }
 
-    const char *error() const { return error_.size() ? error_.data() : nullptr; }
-    const char *output() const { return output_.data(); }
-    size_t output_size() const { return output_.size(); }
+    const char *output() const { return output_; }
+    size_t output_size() const { return output_size_; }
 private:
     void Parse() {
         ParseSpace();
@@ -129,24 +130,29 @@ private:
     }
 
     void Write(char c) {
-        output_.push_back(c);
+        // http://clalance.blogspot.com/2011/01/writing-ruby-extensions-in-c-part-12.html
+        if (output_size_ == output_memory_size_) {
+            output_memory_size_ = 2 * output_memory_size_ + 1024;
+            REALLOC_N(output_, char, output_memory_size_);
+        }
+        if (output_) {
+            output_[output_size_] = c;
+            output_size_++;
+        } else {
+            output_size_ = 0;
+        }
     }
 
     const char *input_;
     int nest_count_;
-    std::vector<char> error_;
-    std::vector<char> output_;
+    char *output_;
+    size_t output_size_;
+    size_t output_memory_size_;
 };
 
 VALUE prettify(VALUE _self, VALUE val) {
-    Check_Type(val, T_STRING);
     const char *input = StringValueCStr(val);
-
     Prettifier prettifier(input);
-    if (prettifier.error()) {
-        rb_raise(rb_eRuntimeError, "%s", prettifier.error());
-    }
-
     return rb_str_new(prettifier.output(), prettifier.output_size());
 }
 

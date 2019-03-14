@@ -20,18 +20,19 @@ RSpec.describe SafePrettyJson do
         { a: '}' },
         { a: ']' },
         { a: '"' },
-        { a: '\\' }
+        { a: '\\' },
+        { a: 'large' * 1_000_000 }
       ].each do |input|
         describe 'compact' do
           input_json = JSON.generate(input)
-          it input_json do
+          it input_json[0..99] do
             expect(SafePrettyJson.prettify(input_json)).to eq(JSON.pretty_generate(input))
           end
         end
 
         describe 'pretty' do
           input_json = JSON.pretty_generate(input)
-          it input_json do
+          it input_json[0..99] do
             expect(SafePrettyJson.prettify(input_json)).to eq(JSON.pretty_generate(input))
           end
         end
@@ -48,6 +49,31 @@ RSpec.describe SafePrettyJson do
         it input do
           expect(SafePrettyJson.prettify(input)).to eq(output)
         end
+      end
+    end
+
+    describe 'nil' do
+      it 'raise TypeError' do
+        expect { SafePrettyJson.prettify(nil) }.to raise_error(TypeError)
+      end
+    end
+
+    describe 'integer' do
+      it 'raise TypeError' do
+        expect { SafePrettyJson.prettify(1) }.to raise_error(TypeError)
+      end
+    end
+
+    describe 'empty string' do
+      it 'returns empty string' do
+        expect(SafePrettyJson.prettify('')).to eq('')
+      end
+    end
+
+    describe 'instance supporting to_str' do
+      it 'process result of to_str' do
+        json_str = Struct.new('Test', :to_str).new('{}')
+        expect(SafePrettyJson.prettify(json_str)).to eq(JSON.pretty_generate({}))
       end
     end
   end
