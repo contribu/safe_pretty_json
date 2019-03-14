@@ -1,6 +1,12 @@
 # SafePrettyJson
 
-SafePrettyJson prettify json string.
+SafePrettyJson is a fast and safe alternative to `JSON.pretty_generate(JSON.parse(input))`.
+
+## Features
+
+- 20x Fast compared to `JSON.pretty_generate(JSON.parse(input))`
+- Key order is not modifed
+- Floating point representation is not modifed `'{ "a": 1.11111111111111111111111111111111111111111 }'`
 
 ## Installation
 
@@ -25,6 +31,7 @@ Or install it yourself as:
 ```ruby
 require 'safe_pretty_json'
 SafePrettyJson.prettify('{ "a": 1 }')
+# "{\n  \"a\": 1\n}"
 ```
 
 SafePrettyJson.prettify doesn't validate if the input string is valid json.
@@ -33,7 +40,7 @@ If the input is invalid, prettify returns a string whose contents are undefined.
 ### Rails (Rack Middleware)
 
 Add following to application.rb.
-This enable response body json prettification only when content-type is application/json.
+This enables response body json prettification only when content-type is application/json.
 
 ```ruby
 config.middleware.use SafePrettyJson::RackMiddleware
