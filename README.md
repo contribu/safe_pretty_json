@@ -20,12 +20,24 @@ Or install it yourself as:
 
 ## Usage
 
+### Basic
+
 ```ruby
+require 'safe_pretty_json'
 SafePrettyJson.prettify('{ "a": 1 }')
 ```
 
 SafePrettyJson.prettify doesn't validate if the input string is valid json.
 If the input is invalid, prettify returns a string whose contents are undefined.
+
+### Rails (Rack Middleware)
+
+Add following to application.rb.
+This enable response body json prettification only when content-type is application/json.
+
+```ruby
+config.middleware.use SafePrettyJson::RackMiddleware
+```
 
 ## Benchmark
 
