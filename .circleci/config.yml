@@ -20,6 +20,7 @@ jobs:
     - run: gem build safe_pretty_json.gemspec
     - run: gem install safe_pretty_json-*.gem
     - run: ruby .circleci/test.rb
+    - run: ruby bench/bench.rb
   deploy:
     docker:
     - image: circleci/ruby:2.5.3-browsers-legacy

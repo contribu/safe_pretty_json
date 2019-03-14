@@ -20,7 +20,27 @@ Or install it yourself as:
 
 ## Usage
 
+```ruby
 SafePrettyJson.prettify('{ "a": 1 }')
+```
+
+SafePrettyJson.prettify doesn't validate if the input string is valid json.
+If the input is invalid, prettify returns a string whose contents are undefined.
+
+## Benchmark
+
+```bash
+ruby bench/bench.rb
+```
+
+- simple: JSON.pretty_generate(JSON.parse(input))
+- safe_pretty_json: this gem
+
+```
+                 user     system      total        real
+simple       9.720000   0.000000   9.720000 (  9.725314)
+safe_pretty_json  0.860000   0.000000   0.860000 (  0.859912)
+```
 
 ## Development
 
