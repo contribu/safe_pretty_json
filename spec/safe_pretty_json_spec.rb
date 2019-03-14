@@ -8,7 +8,7 @@ RSpec.describe SafePrettyJson do
   end
 
   describe 'prettify' do
-    describe 'without floating point' do
+    describe 'various' do
       [
         {},
         [],
@@ -21,6 +21,8 @@ RSpec.describe SafePrettyJson do
         { a: ']' },
         { a: '"' },
         { a: '\\' },
+        { a: ',' },
+        { a: ' ' },
         { a: 'large' * 1_000_000 }
       ].each do |input|
         describe 'compact' do
@@ -39,11 +41,24 @@ RSpec.describe SafePrettyJson do
       end
     end
 
-    describe 'with floating point' do
+    describe 'floating point' do
       [
         [
           '{ "a": 1.111111111111111111111111111111111111111111111111111111 }',
           "{\n  \"a\": 1.111111111111111111111111111111111111111111111111111111\n}"
+        ]
+      ].each do |input, output|
+        it input do
+          expect(SafePrettyJson.prettify(input)).to eq(output)
+        end
+      end
+    end
+
+    describe 'contains space' do
+      [
+        [
+          "{ \"a\": \f\n\r\t\v1 }",
+          "{\n  \"a\": 1\n}"
         ]
       ].each do |input, output|
         it input do
